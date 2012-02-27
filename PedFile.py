@@ -78,6 +78,11 @@ class PedFile(object):
         gstring="\t".join(self.genotypes)
         return outstring + "\t" + gstring
 
+    def toStringNoPheno(self):
+        outstring="\t".join( [ str(self.fid), str(self.iid), self.pid, self.mid, str(self.sex)])
+        gstring="\t".join(self.genotypes)
+        return outstring + "\t" + gstring
+
 
 class Pedigree(object):
     def __init__(self):
@@ -145,7 +150,13 @@ class Pedigree(object):
             outstr=s.toString()
             fh.write(outstr+"\n")
 
-
+    def dumpToFileNoPheno(self,fh):
+        for s in self.founders:
+            outstr=s.toStringNoPheno()
+            fh.write(outstr+"\n")
+        for s in self.nonfounders:
+            outstr=s.toStringNoPheno()
+            fh.write(outstr+"\n")
    
         
 
