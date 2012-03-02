@@ -26,8 +26,16 @@ class PedFile(object):
 
     def __init__(self, pedstring):
         fields = pedstring.split('\t')
+        
         (fid, iid, pid, mid, sex, pheno) = fields[0:6]
-        self.genotypes=fields[7:]
+        gstring="\t".join(fields[6::])
+        # we remove any phasing/unphasing chars in the genotypes
+        # . missing genotypes are denoted -1
+        gstring=gstring.replace('.', '-1 -1')
+        gstring=gstring.replace('/', ' ')
+        gstring=gstring.replace('|', ' ')
+        
+        self.genotypes=gstring.split('\t')
         self.fid= (fid)
         self.iid= (iid)
         self.pid= (pid)
@@ -51,7 +59,7 @@ class PedFile(object):
     def getPheno(self):
         return int(self.pheno)
     def getGenotypes(self):
-        return int(self.genotype)
+        return self.genotypes
 
     def setFid(self, fid):
         self.fid=fid
@@ -83,7 +91,7 @@ class PedFile(object):
         gstring="\t".join(self.genotypes)
         return outstring + "\t" + gstring
 
-
+#############################
 class Pedigree(object):
     def __init__(self):
         """ a Pedigree is made of founders and non-founders; non-founders have both parents in pedigree """
@@ -119,12 +127,33 @@ class Pedigree(object):
            # pedobj.setMother( self.ped_dict[ pedobj.getPid()])
             self.ped_dict[ pedobj.getIid() ] = pedobj
 
+    """ get matrix of genotypes; i.e. a list of lists """
+
+    def getGenotypeMatrix(self):
+        genotype_matrix=[]
+        for founder in self.founders:
+           
+            pedobj=self.ped_dict[founder.getIid()]
+            curr_genotypes=pedobj.getGenotypes()
+           
+            curr_genotypes.insert(0,founder.getIid())
+            genotype_matrix.append(curr_genotypes)
+        for nonfounder in self.nonfounders:
+           
+            pedobj=self.ped_dict[nonfounder.getIid()]
+            curr_genotypes=pedobj.getGenotypes()
+            
+            curr_genotypes.insert(0,nonfounder.getIid())
+            genotype_matrix.append(curr_genotypes)
+
+        return genotype_matrix
 
     def getiIds(self):
         founderids=map(lambda x: x.getIid(), self.founders)
         nonfounders=map(lambda x: x.getIid(), self.nonfounders)
         ids=founderids + nonfounders
         return founderids + nonfounders
+
     """ given and individ id, check if itsin the pedigree and set its list of genotypes """
     def addGenotypes(self, genotypes, iid):
        
@@ -159,4 +188,42 @@ class Pedigree(object):
             fh.write(outstr+"\n")
    
         
+""" a lame attempt for a Python representaiton of a map file """
+""" Map file description http://pngu.mgh.harvard.edu/~purcell/plink/data.shtml#map """
+class Map(object):
+    def __init__(self):
+        """chromosome """
+        self.chrom=''
+        """ marker id """
+        self.id=None
+        """ genetic map position in morgans"""
+        self.mapos=None
+        """ physical position (1-based) """
+        self.pos=None
 
+    def __init__(self, mapstring):
+        fields = mapstring.split('\t')
+        (chrom, id, mapos, pos) = fields[0:4]
+        self.chrom=chrom
+        self.id=id
+        self.mapos=float(mapos)
+        self.pos=int(pos)
+
+    def getChrom(self): return self.chrom
+    def getPos(self): return self.pos
+    def getMap(self): return self.mapos
+    def getId(self): return id
+    
+    def setChrom(self, chr): self.chrom=chr
+    def setId(self, id): self.id=id
+    def setMap(self, map): self.map=float(map)
+    def setPos(self, pos): self.pos=int(pos)
+
+    
+    def toString(self):
+        return "\t".join([self.chrom, self.id, str(self.mapos), str(self.pos)])
+
+    """ chrom pos, id are represented in a map """
+    def toStringVcf(self):
+         
+        return "\t".join([self.chrom, str(self.pos), self.id])
