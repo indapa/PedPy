@@ -6,7 +6,7 @@ import re
 from optparse import OptionParser
 from itertools import  izip
 
-""see  http://stackoverflow.com/questions/5389507/iterating-over-every-two-elements-in-a-list" """
+""see  http://stackoverflow.com/questions/5389507/iterating-over-every-two-elements-in-a-list """
 def pairwise(iterable):
     "s -> (s0,s1), (s2,s3), (s4, s5), ..."
     a = iter(iterable)
