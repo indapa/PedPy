@@ -46,6 +46,34 @@ class PedFile(object):
         self.mother=None
         self.father=None
 
+
+
+    def __init__(self, pedstring, nopheno=True):
+        fields = pedstring.split('\t')
+        
+        
+        (fid, iid, pid, mid, sex) = fields[0:5]
+        gstring="\t".join(fields[5::])
+        
+        # we remove any phasing/unphasing chars in the genotypes
+        # . missing genotypes are denoted -1
+        gstring=gstring.replace('.', '-1 -1')
+        gstring=gstring.replace('/', ' ')
+        gstring=gstring.replace('|', ' ')
+
+        self.genotypes=gstring.split('\t')
+        self.fid= (fid)
+        self.iid= (iid)
+        self.pid= (pid)
+        self.mid= (mid)
+        self.sex= int(sex)
+        self.pheno= -1
+
+        self.mother=None
+        self.father=None
+
+
+
     def getFid(self):
         return (self.fid)
     def getIid(self):
@@ -112,6 +140,33 @@ class Pedigree(object):
             
             self.add(pedobject)
 
+
+    def __init__(self, pedfilename, mendelsoft=True):
+        """ given a filehandle to a mendelsoft file, initialize the Pedigree object """
+        self.founders=[]
+        self.nonfounders=[]
+        self.ped_dict={}
+        self.size=0
+        fh=open(pedfilename, 'r')
+        for line in fh:
+            nopheno=True
+            pedobject=PedFile(line.strip(), nopheno=True )
+
+            self.add(pedobject)
+
+    """ return a list of affecteds and unaffecteds from the Pedigree """
+    def getAffecteds(self):
+        affecteds=[]
+        unaffecteds=[]
+        for key in self.ped_dict.keys():
+            if self.ped_dict[key].getPheno() == 1:
+                unaffecteds.append(key)
+            elif self.ped_dict[key].getPheno() == 2:
+                affecteds.append(key)
+            else:
+                pass
+        return (affecteds, unaffecteds)
+    
     def add(self, pedobj):
         """ check to see if pedobj is in the Pedigree """
         #print pedobj.getPid(), pedobj.getMid(), type(pedobj.getPid()), type(pedobj.getMid())
