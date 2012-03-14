@@ -82,8 +82,8 @@ def main():
             alleles.append(a1)
             alleles.append(a2)
         seg_alleles=set(alleles)
-        print seg_alleles
-        print gls
+        #print seg_alleles
+        #print gls
         #iterate thru and see if they are in affected or unaffected list
         for (sample, genotype) in gls: 
             if sample in affecteds: # if so ...
