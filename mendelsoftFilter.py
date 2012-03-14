@@ -54,8 +54,8 @@ def main():
 
     mapobjects=[]
 
-
-    pedobj=Pedigree(pedfile)
+    mendelsoft=True
+    pedobj=Pedigree(pedfile,mendelsoft)
 
     #print affecteds
     #print unaffecteds
@@ -68,8 +68,9 @@ def main():
     #print names
    
     (nrow, ncol) = np.shape(genotype_matrix)
-    #print nrow, ncol
     #print genotype_matrix
+   # print nrow, ncol
+   # print genotype_matrix
     for i in range(nrow):
         if i==0: continue
         gls=zip(names, list(genotype_matrix[i,:]))
@@ -77,12 +78,12 @@ def main():
         affected_genotypes=[]
         unaffected_genotypes=[]
         for (sample, genotype) in gls:
-            (a1, a2)=genotype.split('\t')
+            (a1, a2)=genotype.split(' ')
             alleles.append(a1)
             alleles.append(a2)
         seg_alleles=set(alleles)
-        #print seg_alleles
-        #print gls
+        print seg_alleles
+        print gls
         #iterate thru and see if they are in affected or unaffected list
         for (sample, genotype) in gls: 
             if sample in affecteds: # if so ...

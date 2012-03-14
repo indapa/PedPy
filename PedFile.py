@@ -26,7 +26,6 @@ class PedFile(object):
 
     def __init__(self, pedstring):
         fields = pedstring.split('\t')
-        
         (fid, iid, pid, mid, sex, pheno) = fields[0:6]
         gstring="\t".join(fields[6::])
         # we remove any phasing/unphasing chars in the genotypes
@@ -51,10 +50,9 @@ class PedFile(object):
     def __init__(self, pedstring, nopheno=True):
         fields = pedstring.split('\t')
         
-        
         (fid, iid, pid, mid, sex) = fields[0:5]
-        gstring="\t".join(fields[5::])
-        
+        gstring=" ".join(fields[5::])
+
         # we remove any phasing/unphasing chars in the genotypes
         # . missing genotypes are denoted -1
         gstring=gstring.replace('.', '-1 -1')
@@ -143,6 +141,7 @@ class Pedigree(object):
 
     def __init__(self, pedfilename, mendelsoft=True):
         """ given a filehandle to a mendelsoft file, initialize the Pedigree object """
+        sys.stderr.write("mendelsoft ...\n")
         self.founders=[]
         self.nonfounders=[]
         self.ped_dict={}
