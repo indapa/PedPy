@@ -77,7 +77,7 @@ def main():
         affected_genotypes=[]
         unaffected_genotypes=[]
         for (sample, genotype) in gls:
-            (a1, a2)=genotype.split(' ')
+            (a1, a2)=genotype.split('\t')
             alleles.append(a1)
             alleles.append(a2)
         seg_alleles=set(alleles)
