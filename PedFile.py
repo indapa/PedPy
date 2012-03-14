@@ -52,7 +52,7 @@ class PedFile(object):
         
         (fid, iid, pid, mid, sex) = fields[0:5]
         gstring=" ".join(fields[5::])
-
+        
         # we remove any phasing/unphasing chars in the genotypes
         # . missing genotypes are denoted -1
         gstring=gstring.replace('.', '-1 -1')
@@ -60,6 +60,7 @@ class PedFile(object):
         gstring=gstring.replace('|', ' ')
 
         self.genotypes=gstring.split('\t')
+        #print self.genotypes
         self.fid= (fid)
         self.iid= (iid)
         self.pid= (pid)

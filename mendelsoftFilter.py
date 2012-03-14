@@ -64,6 +64,7 @@ def main():
     # initially the rows are the individuals, column are the markers
     # we transpose on the fly and make the rows the genotypes and the columns the individuals, since this is the structure of the VCF
     genotype_matrix=np.array( pedobj.getGenotypeMatrix() ).transpose()
+    #print genotype_matrix
     names=genotype_matrix[0,:]
     #print names
    
