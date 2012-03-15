@@ -79,6 +79,7 @@ def main():
         affected_genotypes=[]
         unaffected_genotypes=[]
         for (sample, genotype) in gls:
+            if genotype == '0 0': continue # skip over samples not assigned genotype, even after mendelsoft correction
             (a1, a2)=genotype.split(' ')
             alleles.append(a1)
             alleles.append(a2)
