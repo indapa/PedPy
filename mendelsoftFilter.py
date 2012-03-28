@@ -26,6 +26,7 @@ def main():
     parser.add_option("--model", type="string", dest="model", default = "dominant", help=" inheritance model (dominant recessive) ")
     parser.add_option("--affected", type="string", dest="affected", help="sample name of affecteds (one per line)")
     parser.add_option("--unaffected", type="string", dest="unaffected", help="sample name of unaffecteds (one per line)")
+    parser.add_option("--v", action="store_true", dest="verbose",  help="Print additional info of filtering results to output")
     (options, args)=parser.parse_args()
 
     affecteds=[]
@@ -110,11 +111,13 @@ def main():
                 #print genotype_matrix
             elif len(shared_unaffected_segregating) < len(unaffecteds): # some but not all unaffectes are homoz ref
                 print  chr, numb, pos, corrected,"MAYBE"
-                print "unaffecteds  segregating for alt: ", filter( lambda x, segregating=True: segregating in x, unaffected_genotypes)
+                if options.verbose == True:
+                    print "unaffecteds  segregating for alt: ", filter( lambda x, segregating=True: segregating in x, unaffected_genotypes)
         else:
             print  chr, numb, pos, corrected,"NO" # since not all the affectes have a mutant alele, its not a cnadidate
             #print shared_affected_segregating, affected_genotypes
-            print "affecteds not segregating for alt: ", filter( lambda x, segregating=False: segregating in x, affected_genotypes), len(shared_affected_segregating), len(affecteds)
+            if options.verbose == True:
+                print "affecteds not segregating for alt: ", filter( lambda x, segregating=False: segregating in x, affected_genotypes), len(shared_affected_segregating), len(affecteds)
             
             
 
