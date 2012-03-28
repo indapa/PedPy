@@ -88,6 +88,7 @@ def main():
         #print gls
         #iterate thru and see if they are in affected or unaffected list
         for (sample, genotype) in gls: 
+            if genotype == '0 0': continue
             if sample in affecteds: # if so ...
                 affected_genotypes.append( ( sample, isSegregating(genotype), genotype ) ) # are they segregating for a non-ref allele?
             if sample in unaffecteds:
@@ -107,8 +108,9 @@ def main():
                 print  chr, numb, pos, corrected,"MAYBE"
         else:
             print  chr, numb, pos, corrected,"NO" # since not all the affectes have a mutant alele, its not a cnadidate
-            #print len(shared_affected_segregating), affected_genotypes
-
+            #print shared_affected_segregating, affected_genotypes
+            print "affecteds not segregating for alt: ", filter( lambda x, segregating=False: segregating in x, affected_genotypes)
+            
 
 if __name__ == "__main__":
     main()
